@@ -1,0 +1,66 @@
+﻿@model CascadingDropDownApp.Models.Book
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Save New Book</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(x => x.BookCode)</td>
+                <td>@Html.TextBoxFor(m => m.BookCode)</td>
+                <td>@Html.ValidationMessageFor(m => m.BookCode)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.BookTitle)</td>
+                <td>@Html.TextBoxFor(m => m.BookTitle)</td>
+                <td>@Html.ValidationMessageFor(m => m.BookTitle)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.BookQuantity)</td>
+                <td>@Html.TextBoxFor(m => m.BookQuantity)</td>
+                <td>@Html.ValidationMessageFor(m => m.BookQuantity)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.BookAuthor)</td>
+                <td>@Html.TextBoxFor(m => m.BookAuthor)</td>
+                <td>@Html.ValidationMessageFor(m => m.BookAuthor)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.BookPublisher)</td>
+                <td>@Html.TextBoxFor(m => m.BookPublisher)</td>
+                <td>@Html.ValidationMessageFor(m => m.BookPublisher)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><br /><button type="submit">Save</button> </td>
+            </tr>
+        </table>
+    </fieldset>
+}
+
+<br />
+@if (ViewBag.SaveBookMessage != null)
+{
+    <div class="form-group">
+        <label>@ViewBag.SaveBookMessage</label>
+    </div>
+
+    <script type="text/javascript">
+        alert("@ViewBag.SaveBookMessage");
+    </script>
+}
+
+<script src="~/Scripts/jquery-2.2.3.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>

@@ -1,0 +1,127 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.BorrowBooks
+
+@{
+    ViewBag.Title = "Index";
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Show Book Status Bookwise</legend>
+        <form method="POST" id="myForm">
+
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(x => x.BookTitle)</td>
+                    <td>@Html.DropDownListFor(m => m.BookTitle, new SelectList(ViewBag.allBooks, "BookCode", "BookTitle"), "--Select--", "")</td>
+                </tr>
+
+                <tr>
+                    <td><label for="bookISBN">ISBN: </label></td>
+                    <td>
+                        <label name="bookISBN" id="bookISBN"></label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="bookAuthor">Author: </label></td>
+                    <td>
+                        <label name="BookAuthor" id="BookAuthor"></label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="BookQuantity">Remaining Quantity: </label></td>
+                    <td>
+                        <select name="BookQuantity" id="BookQuantity" required=""></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><br /><button type="submit">Show in PDF</button> </td>
+                </tr>
+            </table>
+        </form>
+        <br /> <br />
+
+        <table id="myTable" class="table table-bordered table responsive table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Student Code</th>
+                    <th>Student Name</th>
+                    <th>Student Contact No</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+
+        </table>
+    </fieldset>
+}
+
+<script src="~/Scripts/jquery-2.2.3.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@section scripts
+{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable();
+            $("#myTable").hide();
+            $("#BookTitle").change(function () {
+                var bookCode = $("#BookTitle").val();
+                $("#myTable").show();
+
+                $("#bookISBN").empty();
+                $("#BookAuthor").empty();
+                $("#BookQuantity").empty();
+                table.clear().draw(false);
+
+                var json = { bookCode: bookCode };
+
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetBookInfoByBookCode',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $("#bookISBN").append(data.BookCode);
+                        $("#BookAuthor").append(data.BookAuthor);
+                        $("#BookQuantity").append('<option value="' + data.BookQuantity + '">' + data.BookQuantity + '</option>');
+                    }
+                });
+
+                //
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetBookStatusByBookCode',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            table.row.add([
+                                value.StudentID, value.StudentName, value.StudentContactNo
+                            ]).draw(false);
+                        });
+                    }
+                });
+                //
+
+            });
+
+        });
+    </script>
+}

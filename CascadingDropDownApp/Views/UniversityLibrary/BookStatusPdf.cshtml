@@ -1,0 +1,64 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.BorrowBooks
+
+@{
+    ViewBag.Title = "Index";
+    List<BorrowBooks> bookStatus = ViewBag.bookStatus;
+    Book Bookinfo = ViewBag.Bookinfo;
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Show Book Status Bookwise</legend>
+
+        <br /> <br />
+
+        <table class="table table-bordered table responsive table-hover table-striped">
+            <tr>
+                <th>Book Title</th>
+                <td>@Bookinfo.BookTitle</td>
+            </tr>
+            <tr>
+                <th>Book Code</th>
+                <td>@Bookinfo.BookCode</td>
+            </tr>
+            <tr>
+                <th>Book Author</th>
+                <td>@Bookinfo.BookAuthor</td>
+            </tr>
+        </table>
+
+        <legend>Borrowed By: </legend>
+
+        <table id="myTable" class="table table-bordered table responsive table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Student Contact No</th>
+                <tr>
+            </thead>
+            @if (bookStatus != null)
+            {
+                foreach (var aBookStatus in bookStatus)
+                {
+                    <tr>
+                        <td>@aBookStatus.StudentID</td>
+                        <td>@aBookStatus.StudentName</td>
+                        <td>@aBookStatus.StudentContactNo</td>
+                    </tr>
+                }
+            }
+        </table>
+    </fieldset>
+}

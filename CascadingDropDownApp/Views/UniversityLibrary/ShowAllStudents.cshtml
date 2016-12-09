@@ -1,0 +1,54 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.UniversityStudent
+
+@{
+    ViewBag.Title = "Index";
+    List<UniversityStudent> allStudents = ViewBag.allStudents;
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+<fieldset>
+    <legend>All registered Students</legend>
+
+    <table id="AllStudentsTable" class="table table-bordered table responsive table-hover table-striped">
+
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Student Contact</th>
+                <th>Student Email</th>
+            </tr>
+        </thead>
+        @if (allStudents != null)
+        {
+            foreach (var aStudent in allStudents)
+            {
+                <tr>
+                    <td>@aStudent.StudentId</td>
+                    <td>@aStudent.StudentName</td>
+                    <td>@aStudent.StudentContactNo</td>
+                    <td>@aStudent.StudentEmail</td>
+                </tr>
+            }
+        }
+    </table>
+</fieldset>
+
+@section scripts
+{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#AllStudentsTable').DataTable();
+        });
+    </script>
+}

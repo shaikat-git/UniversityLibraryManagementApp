@@ -1,0 +1,58 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.Book
+
+@{
+    ViewBag.Title = "Index";
+    List<Book> allBooks = ViewBag.allBooks;
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+<fieldset>
+    <legend>All Stored Book</legend>
+
+    <table id="allBooksTable" class="table table-bordered table responsive table-hover table-striped">
+
+        <thead>
+            <tr>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Total Book Quantity</th>
+                <th>Book Remaining</th>
+            </tr>
+        </thead>
+        @if (allBooks != null)
+        {
+            foreach (var aBook in allBooks)
+            {
+                <tr>
+                    <td>@aBook.BookCode</td>
+                    <td>@aBook.BookTitle</td>
+                    <td>@aBook.BookAuthor</td>
+                    <td>@aBook.BookPublisher</td>
+                    <td>@aBook.BookQuantity</td>
+                    <td>@aBook.BookRemaining</td>
+                </tr>
+            }
+        }
+    </table>
+</fieldset>
+
+@section scripts
+{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#allBooksTable').DataTable();
+        });
+    </script>
+}

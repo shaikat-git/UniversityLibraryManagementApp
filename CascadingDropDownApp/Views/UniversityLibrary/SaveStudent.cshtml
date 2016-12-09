@@ -1,0 +1,60 @@
+﻿@model CascadingDropDownApp.Models.UniversityStudent
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Save Registered Student</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(x => x.StudentId)</td>
+                <td>@Html.TextBoxFor(m => m.StudentId)</td>
+                <td>@Html.ValidationMessageFor(m => m.StudentId)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.StudentName)</td>
+                <td>@Html.TextBoxFor(m => m.StudentName)</td>
+                <td>@Html.ValidationMessageFor(m => m.StudentName)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.StudentEmail)</td>
+                <td>@Html.TextBoxFor(m => m.StudentEmail)</td>
+                <td>@Html.ValidationMessageFor(m => m.StudentEmail)</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(x => x.StudentContactNo)</td>
+                <td>@Html.TextBoxFor(m => m.StudentContactNo)</td>
+                <td>@Html.ValidationMessageFor(m => m.StudentContactNo)</td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><br /><button type="submit">Save</button> </td>
+            </tr>
+        </table>
+    </fieldset>
+}
+<br />
+@if (ViewBag.SaveStudentMessage != null)
+{
+    <div class="form-group">
+        <label>@ViewBag.SaveStudentMessage</label>
+    </div>
+
+    <script type="text/javascript">
+        alert("@ViewBag.SaveStudentMessage");
+    </script>
+}
+
+<script src="~/Scripts/jquery-2.2.3.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>

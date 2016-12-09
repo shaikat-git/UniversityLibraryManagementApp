@@ -1,0 +1,155 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.BorrowBooks
+
+@{
+    ViewBag.Title = "Index";
+
+    //List<BorrowBooks> BorrowBooksList = ViewBag.allBooks;
+}
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Borrow Book To Student</legend>
+        <form method="POST" id="myForm">
+
+            <table>
+
+
+                <tr>
+                    <td>@Html.LabelFor(x => x.BookTitle)</td>
+                    <td>@Html.DropDownListFor(m => m.BookTitle, new SelectList(ViewBag.allBooks, "BookCode", "BookTitle"), "--Select--", "")</td>
+                    <td>@Html.ValidationMessageFor(m => m.BookTitle)</td>
+                    <td>@Html.LabelFor(x => x.StudentID)</td>
+                    <td>@Html.DropDownListFor(m => m.StudentID, new SelectList(ViewBag.allStudents, "StudentId", "StudentId"), "--Select--", "")</td>
+                    <td>@Html.ValidationMessageFor(m => m.StudentID)</td>
+                </tr>
+
+                <tr>
+                    <td><label for="BookCode">ISBN: </label></td>
+                    <td>
+                        <label name="BookCode" id="BookCode"></label>
+                    </td>
+                    <td></td>
+                    <td><label for="studentName">Name: </label></td>
+                    <td>
+                        <label name="studentName" id="studentName"></label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="bookAuthor">Author: </label></td>
+                    <td>
+                        <label name="BookAuthor" id="BookAuthor"></label>
+                    </td>
+                    <td></td>
+                    <td><label for="studentEmail">Email: </label></td>
+                    <td>
+                        <label name="studentEmail" id="studentEmail"></label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="BookQuantity">Remaining Quantity: </label></td>
+                    <td>
+                        <select name="BookQuantity" id="BookQuantity" required=""></select>
+                    </td>
+
+                    <td></td>
+                    <td><label for="StudentContactNo">Contact No: </label></td>
+                    <td>
+                        <label name="studentContactNo" id="studentContactNo"></label>
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <td><br /><button type="submit">Borrow Book</button> </td>
+                </tr>
+            </table>
+        </form>
+    </fieldset>
+}
+
+<br />
+@if (ViewBag.BorrowBookMessage != null)
+{
+    <div class="form-group">
+        <label>@ViewBag.BorrowBookMessage</label>
+    </div>
+
+    <script type="text/javascript">
+        alert("@ViewBag.BorrowBookMessage");
+    </script>
+}
+
+
+<script src="~/Scripts/jquery-2.2.3.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#StudentID").change(function () {
+                var stdId = $("#StudentID").val();
+
+                $("#studentName").empty();
+                $("#studentEmail").empty();
+                $("#studentContactNo").empty();
+                $("#studentId").empty();
+
+                var json = { studentId: stdId };
+
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetStudentInfoByStudentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $("#studentName").append(data.StudentName);
+                        $("#studentEmail").append(data.StudentEmail);
+                        $("#studentContactNo").append(data.StudentContactNo);
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#BookTitle").change(function () {
+
+                var bookCode = $("#BookTitle").val();
+
+                $("#BookCode").empty();
+                $("#BookAuthor").empty();
+                $("#BookQuantity").empty();
+                var json = { bookCode: bookCode };
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetBookInfoByBookCode',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $("#BookCode").append(data.BookCode);
+                        $("#BookAuthor").append(data.BookAuthor);
+                        $("#BookQuantity").append('<option value="' + data.BookQuantity + '">' + data.BookQuantity + '</option>');
+                    }
+                });
+            });
+
+
+        });
+    </script>
+}

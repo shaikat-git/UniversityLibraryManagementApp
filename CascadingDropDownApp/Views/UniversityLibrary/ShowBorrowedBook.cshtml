@@ -1,0 +1,122 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.BorrowBooks
+
+@{
+    ViewBag.Title = "Index";
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+}
+
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Show all Borrowed Books Studentwise</legend>
+
+        <table>
+            <tr>
+                <td></td>
+                <td>@Html.LabelFor(x => x.StudentID)</td>
+                <td>@Html.DropDownListFor(m => m.StudentID, new SelectList(ViewBag.allStudents, "StudentId", "StudentId"), "--Select--", "")</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label for="studentName">Name: </label></td>
+                <td>
+                    <label name="studentName" id="studentName"></label>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><label for="studentEmail">Email: </label></td>
+                <td>
+                    <label name="studentEmail" id="studentEmail"></label>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><label for="StudentContactNo">Contact No: </label></td>
+                <td>
+                    <label name="studentContactNo" id="studentContactNo"></label>
+                </td>
+            </tr>
+
+        </table>
+        <br /> <br />
+
+        <table id="myTable" class="table table-bordered table responsive table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Book Code</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+    </fieldset>
+}
+
+<script src="~/Scripts/jquery-2.2.3.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@section scripts
+{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable();
+            $("#myTable").hide();
+            $("#StudentID").change(function () {
+                var stdId = $("#StudentID").val();
+                $("#myTable").show();
+                $("#studentName").empty();
+                $("#studentEmail").empty();
+                $("#studentContactNo").empty();
+                $("#studentId").empty();
+                table.clear().draw(false);
+
+                var json = { studentId: stdId };
+
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetStudentInfoByStudentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $("#studentName").append(data.StudentName);
+                        $("#studentEmail").append(data.StudentEmail);
+                        $("#studentContactNo").append(data.StudentContactNo);
+                    }
+                });
+
+                //
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetBorrowedBookByStudentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            table.row.add([
+                                 value.BookTitle, value.BookCode
+                            ]).draw(false);
+                        });
+                    }
+                });
+                //
+
+            });
+
+        });
+    </script>
+}

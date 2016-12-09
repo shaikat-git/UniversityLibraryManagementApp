@@ -1,0 +1,81 @@
+﻿@using CascadingDropDownApp.Models
+@model CascadingDropDownApp.Models.BorrowBooks
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>University Library Management System</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Return Book</legend>
+        <form method="POST" id="myForm">
+
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(x => x.StudentID)</td>
+                    <td>@Html.DropDownListFor(m => m.StudentID, new SelectList(ViewBag.allStudents, "StudentId", "StudentId"), "--Select--", "")</td>
+
+                </tr>
+                <tr>
+                    <td><label for="BorrowedBooks">Borrowed Books</label></td>
+                    <td>
+                        <select name="BorrowedBooks" id="BorrowedBooks" required=""></select>
+                    </td>
+
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><br /><button type="submit">Return Book</button> </td>
+                </tr>
+            </table>
+        </form>
+
+        @if (ViewBag.ReturnBorrowMsg != null)
+        {
+            <div class="form-group">
+                <label><br />@ViewBag.ReturnBorrowMsg</label>
+            </div>
+
+            <script type="text/javascript">
+        alert("@ViewBag.ReturnBorrowMsg");
+            </script>
+        }
+
+    </fieldset>
+}
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#StudentID").change(function () {
+                var stdId = $("#StudentID").val();
+                $("#studentName").empty();
+                $("#studentEmail").empty();
+                $("#studentContactNo").empty();
+                $("#studentId").empty();
+
+                $("#BorrowedBooks").empty();
+                var json = { studentId: stdId };
+                $.ajax({
+                    type: "POST",
+                    url: '/UniversityLibrary/GetBorrowedBookByStudentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            $("#BorrowedBooks").append('<option value="' + value.BookCode + '">' + value.BookTitle + '</option>');
+
+                        });
+                    }
+
+                });
+            });
+
+        });
+    </script>
+}
